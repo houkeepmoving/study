@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue源码解析</title>
+</head>
+<body>
+  <script>
+    class myVue {
+      constructor(options) {
+        this.$options = options;
+        this.$data = options.data;
+        this.observe(this.$data);
+      }
+      observe(value) {
+        if (!value || typeof value !== 'object') {
+          return;
+        }
+        Object.keys(value).forEach((key) => {
+          this.defineReactive(value, key, value[key])
+        })
+      }
+
+      // 数据的响应化函数
+      defineReactive(obj, key, val) {
+        Object.defineProperty(obj, key, {
+          get() {
+            return val;
+          },
+          set(newVal) {
+            if (newVal === val) {
+              return;
+            }
+            val = newVal;
+          }
+        })
+      }
+    }
+  </script>
+</body>
+</html>
